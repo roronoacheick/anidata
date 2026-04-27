@@ -1,10 +1,8 @@
 #!/bin/sh
-'''exec' "/Users/cheickna/Documents/DIA2/Anita_data/Projet 23-03/anidata-lab/venv/bin/python3.12" "$0" "$@"
+'''exec' "/Users/nerminekhadraoui/Desktop/HETIC/Bachelor 2/projet_anime/anidata/venv/bin/python3.12" "$0" "$@"
 ' '''
-# -*- coding: utf-8 -*-
-import re
 import sys
 from mako.cmd import cmdline
 if __name__ == '__main__':
-    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.argv[0] = sys.argv[0].removesuffix('.exe')
     sys.exit(cmdline())
