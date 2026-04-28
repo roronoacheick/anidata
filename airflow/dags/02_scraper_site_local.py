@@ -76,11 +76,6 @@ with DAG(
             "--output-dir /opt/airflow/data/scraped_data"
         ),
         doc_md="Scrape le mock-site via le package anidata_scraper.",
-    # Scraping du site (utilise le script du projet anidata-scraper)
-    task_scrape = BashOperator(
-        task_id="scrape_site",
-        bash_command="cd /opt/airflow && python anidata-scraper/anidata_scraper/scraper.py",
-        doc_md="Scrape le site local http://localhost:8000/",
     )
 
     # Vérification des données scrappées
