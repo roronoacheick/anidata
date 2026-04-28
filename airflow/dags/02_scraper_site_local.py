@@ -67,11 +67,7 @@ with DAG(
         doc_md="Démarrage du scraping du site local",
     )
 
-    # Scraping du site
-    # On utilise le package anidata_scraper installé en pip dans l'image
-    # Docker (cf. Dockerfile -> pip install /opt/airflow/scraper/).
-    # MOCK_SITE_URL est définie en variable d'env Airflow, par défaut le
-    # service Docker `mock-site` (réseau interne docker-compose).
+    # okk
     task_scrape = BashOperator(
         task_id="scrape_site",
         bash_command=(

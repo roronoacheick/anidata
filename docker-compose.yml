@@ -165,6 +165,8 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=${AIRFLOW__WEBSERVER__EXPOSE_CONFIG}
       - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=${AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION}
+      # Active le basic_auth sur l'API REST (sinon 401 pour trigger_dag_scraper.py)
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
       - _PIP_ADDITIONAL_REQUIREMENTS=pandas elasticsearch apache-airflow-providers-elasticsearch requests beautifulsoup4
       - MOCK_SITE_URL=${MOCK_SITE_URL:-http://mock-site}
       - PYTHONPATH=/opt/airflow/scraper:/opt/airflow

@@ -1,17 +1,5 @@
 #!/usr/bin/env python3
-"""
-Monitor des runs GitHub Actions.
 
-Rôle :
-- Interroge en boucle l'API GitHub (GET /repos/{owner}/{repo}/actions/runs)
-  pour récupérer le dernier workflow run sur la branche cible.
-- Quand le run est completed + success, déclenche le DAG 3 (scraper) sur
-  Airflow en appelant trigger_dag_scraper.py.
-
-Usage :
-    export GITHUB_TOKEN=ghp_xxx          # ou via .env
-    python monitor.py
-"""
 
 from __future__ import annotations
 
