@@ -67,24 +67,17 @@ with DAG(
         doc_md="Démarrage du scraping du site local",
     )
 
-    # Scraping du site
-    # On utilise le package anidata_scraper installé en pip dans l'image
-    # Docker (cf. Dockerfile -> pip install /opt/airflow/scraper/).
-    # MOCK_SITE_URL est définie en variable d'env Airflow, par défaut le
-    # service Docker `mock-site` (réseau interne docker-compose).
+    # Scraping du site (lance le scraper anidata-scraper)
     task_scrape = BashOperator(
         task_id="scrape_site",
-        bash_command=(
-            "python -m anidata_scraper.scraper "
-            "--base-url ${MOCK_SITE_URL:-http://mock-site} "
-            "--output-dir /opt/airflow/data/scraped_data"
-        ),
-        doc_md="Scrape le mock-site via le package anidata_scraper.",
-    # Scraping du site (utilise le script du projet anidata-scraper)
-    task_scrape = BashOperator(
-        task_id="scrape_site",
-        bash_command="cd /opt/airflow && python anidata-scraper/anidata_scraper/scraper.py",
-        doc_md="Scrape le site local http://localhost:8000/",
+        bash_command="""
+            mkdir -p /opt/airflow/data/scraped_data && \
+            cd /opt/airflow && \
+            python -m anidata_scraper.scraper \
+                --base-url http://mock-site \
+                --output-dir /opt/airflow/data/scraped_data
+        """,
+        doc_md="Scrape le site local mock-site avec BeautifulSoup",
     )
 
     # Vérification des données scrappées

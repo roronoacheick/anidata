@@ -36,6 +36,22 @@ services:
     networks:
       - anidata-network
 
+
+  # ==========================================
+  # MOCK-SITE (serveur web Nginx pour les tests)
+  # ==========================================
+  mock-site:
+    image: nginx:alpine
+    container_name: anidata-mock-site
+    ports:
+      - "8088:80"
+    volumes:
+      - ./mock-site/site:/usr/share/nginx/html:ro
+    restart: unless-stopped
+    mem_limit: 64m
+    networks:
+      - anidata-network
+
   # ==========================================
   # GRAFANA (remplace Kibana - 4x plus léger)
   # ==========================================
@@ -183,6 +199,7 @@ services:
       - ./airflow/plugins:/opt/airflow/plugins
       - ./airflow/scripts:/opt/airflow/scripts
       - ./data:/opt/airflow/data
+      - ./anidata-scraper:/opt/airflow/anidata_scraper
     ports:
       - "8080:8080"
     mem_limit: 512m
@@ -228,6 +245,7 @@ services:
       - ./airflow/plugins:/opt/airflow/plugins
       - ./airflow/scripts:/opt/airflow/scripts
       - ./data:/opt/airflow/data
+      - ./anidata-scraper:/opt/airflow/anidata_scraper
     mem_limit: 512m
     depends_on:
       airflow-init:
