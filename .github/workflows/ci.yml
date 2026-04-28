@@ -14,6 +14,21 @@ on:
   pull_request:
     branches: [main, Test]
 
+# Utilisé pour la séance 2 (CI seule, sans déploiement).
+#
+# La progression vers la version complète CI/CD avec build+push d'image
+# Docker se fait dans .github/workflows/ci-cd.yml (séance 3).
+# ===========================================================================
+
+# Évènements qui déclenchent le workflow
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Empêche que deux exécutions tournent en parallèle sur la même branche :
+# le nouveau push annule l'ancien run (économise du temps de runner).
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
@@ -21,6 +36,15 @@ concurrency:
 jobs:
   # ---------------------------------------------------------------------------
   # JOB 1 : LINT
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # JOB 1 : LINT
+  # Vérifie le style de code avec ruff. Très rapide (~10 secondes).
   # ---------------------------------------------------------------------------
   lint:
     name: Lint (ruff)

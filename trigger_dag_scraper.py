@@ -91,3 +91,4 @@ def trigger_dag_scraper():
 if __name__ == "__main__":
     exit_code = trigger_dag_scraper()
     sys.exit(exit_code)
+    sys.exit(exit_code)
