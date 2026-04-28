@@ -179,6 +179,7 @@ jobs:
     needs: [build-and-push]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/Test' || github.ref == 'refs/heads/cheickna' || github.ref == 'refs/heads/nermine')
+    continue-on-error: true
     
     steps:
       - name: Checkout du code
@@ -193,20 +194,25 @@ jobs:
         run: |
           pip install requests
 
-      - name: 🚀 Déclencher DAG 02 (Scraping)
+      - name: 🚀 Déclencher DAG 02 (Scraping) - OPTIONNEL
         env:
           AIRFLOW_HOST: ${{ secrets.AIRFLOW_HOST }}
           AIRFLOW_USER: ${{ secrets.AIRFLOW_USER }}
           AIRFLOW_PASSWORD: ${{ secrets.AIRFLOW_PASSWORD }}
         run: |
-          python trigger_dag_scraper.py
+          if [ -z "$AIRFLOW_HOST" ]; then
+            echo "⚠️  AIRFLOW_HOST non configuré - job optionnel"
+            echo "Pour configurer : Settings → Secrets and variables → Actions"
+            exit 0
+          fi
+          python trigger_dag_scraper.py || echo "⚠️  Trigger DAG échoué (Airflow peut ne pas être accessible)"
 
-      - name: ✅ Succès du déclenchement
+      - name: ℹ️ Information
         run: |
-          echo "## 🚀 Pipeline Activé" >> $GITHUB_STEP_SUMMARY
+          echo "## ℹ️ Trigger DAG (Optionnel)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ DAG 02 (Scraper) déclenché" >> $GITHUB_STEP_SUMMARY
-          echo "⏳ DAG 03 (Cleaning) s'activera automatiquement après DAG 02" >> $GITHUB_STEP_SUMMARY
+          echo "Ce job tente de déclencher DAG 02 mais ne fait pas échouer le workflow." >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📊 Consultez Airflow UI pour suivre l'exécution :" >> $GITHUB_STEP_SUMMARY
-          echo "http://localhost:8080" >> $GITHUB_STEP_SUMMARY
+          echo "**Pour activer ce job :**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Ajouter les secrets GitHub (Settings → Secrets)" >> $GITHUB_STEP_SUMMARY
+          echo "2. Consulter GITHUB_ACTIONS_SETUP.md pour les détails" >> $GITHUB_STEP_SUMMARY

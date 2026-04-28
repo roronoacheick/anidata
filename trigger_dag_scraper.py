@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-Script pour déclencher le DAG 3 (Scraper) via l'API Airflow
+Script pour déclencher le DAG 02 (Scraper) via l'API Airflow
 Appelé par le CI GitHub après les tests OK
 """
-#tessss
 import requests
 import json
 import sys
@@ -95,4 +94,3 @@ def trigger_dag_scraper():
 if __name__ == "__main__":
     exit_code = trigger_dag_scraper()
     sys.exit(exit_code)
-#teste
