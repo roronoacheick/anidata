@@ -106,7 +106,11 @@ services:
   # AIRFLOW - Init (exécuté une seule fois)
   # ==========================================
   airflow-init:
-    image: apache/airflow:2.8.1-python3.11
+    # Image custom (avec scraper installé) si AIRFLOW_IMAGE est définie ;
+    # sinon image officielle vanilla. Pour la séance 3 :
+    #   docker build -t anidata-airflow:local .
+    #   AIRFLOW_IMAGE=anidata-airflow:local docker compose up -d
+    image: ${AIRFLOW_IMAGE:-apache/airflow:2.8.1-python3.11}
     container_name: anidata-airflow-init
     entrypoint: /bin/bash
     command:
@@ -153,7 +157,11 @@ services:
   # AIRFLOW - Webserver
   # ==========================================
   airflow-webserver:
-    image: apache/airflow:2.8.1-python3.11
+    # Image custom (avec scraper installé) si AIRFLOW_IMAGE est définie ;
+    # sinon image officielle vanilla. Pour la séance 3 :
+    #   docker build -t anidata-airflow:local .
+    #   AIRFLOW_IMAGE=anidata-airflow:local docker compose up -d
+    image: ${AIRFLOW_IMAGE:-apache/airflow:2.8.1-python3.11}
     container_name: anidata-airflow-webserver
     command: webserver
     environment:
@@ -164,6 +172,9 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=${AIRFLOW__WEBSERVER__EXPOSE_CONFIG}
       - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=${AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION}
+      - _PIP_ADDITIONAL_REQUIREMENTS=pandas elasticsearch apache-airflow-providers-elasticsearch requests beautifulsoup4
+      - MOCK_SITE_URL=${MOCK_SITE_URL:-http://mock-site}
+      - PYTHONPATH=/opt/airflow/scraper:/opt/airflow
       - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.default
       - _PIP_ADDITIONAL_REQUIREMENTS=pandas elasticsearch apache-airflow-providers-elasticsearch
     volumes:
@@ -193,7 +204,11 @@ services:
   # AIRFLOW - Scheduler
   # ==========================================
   airflow-scheduler:
-    image: apache/airflow:2.8.1-python3.11
+    # Image custom (avec scraper installé) si AIRFLOW_IMAGE est définie ;
+    # sinon image officielle vanilla. Pour la séance 3 :
+    #   docker build -t anidata-airflow:local .
+    #   AIRFLOW_IMAGE=anidata-airflow:local docker compose up -d
+    image: ${AIRFLOW_IMAGE:-apache/airflow:2.8.1-python3.11}
     container_name: anidata-airflow-scheduler
     command: scheduler
     environment:
@@ -202,6 +217,9 @@ services:
       - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW__CORE__FERNET_KEY}
       - AIRFLOW__CORE__LOAD_EXAMPLES=${AIRFLOW__CORE__LOAD_EXAMPLES}
       - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=${AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION}
+      - _PIP_ADDITIONAL_REQUIREMENTS=pandas elasticsearch apache-airflow-providers-elasticsearch requests beautifulsoup4
+      - MOCK_SITE_URL=${MOCK_SITE_URL:-http://mock-site}
+      - PYTHONPATH=/opt/airflow/scraper:/opt/airflow
       - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.default
       - _PIP_ADDITIONAL_REQUIREMENTS=pandas elasticsearch apache-airflow-providers-elasticsearch
     volumes:
