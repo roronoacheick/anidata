@@ -166,3 +166,47 @@ jobs:
           echo '```bash' >> $GITHUB_STEP_SUMMARY
           echo "docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
+
+  # ---------------------------------------------------------------------------
+  # JOB 4 : DÉCLENCHER LE DAG 02 (SCRAPING)
+  # ---------------------------------------------------------------------------
+  # S'exécute après le push sur les branches de déploiement
+  # Déclenche automatiquement le DAG 02 qui scrape le site
+  # Puis DAG 03 se déclenche automatiquement après DAG 02 (via ExternalTaskSensor)
+  # ---------------------------------------------------------------------------
+  trigger-dag:
+    name: Déclencher DAG 02 Scraper
+    needs: [build-and-push]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref in ('refs/heads/main', 'refs/heads/Test', 'refs/heads/cheickna', 'refs/heads/nermine')
+    
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Installer les dépendances
+        run: |
+          pip install requests
+
+      - name: 🚀 Déclencher DAG 02 (Scraping)
+        env:
+          AIRFLOW_HOST: ${{ secrets.AIRFLOW_HOST }}
+          AIRFLOW_USER: ${{ secrets.AIRFLOW_USER }}
+          AIRFLOW_PASSWORD: ${{ secrets.AIRFLOW_PASSWORD }}
+        run: |
+          python trigger_dag_scraper.py
+
+      - name: ✅ Succès du déclenchement
+        run: |
+          echo "## 🚀 Pipeline Activé" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ DAG 02 (Scraper) déclenché" >> $GITHUB_STEP_SUMMARY
+          echo "⏳ DAG 03 (Cleaning) s'activera automatiquement après DAG 02" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Consultez Airflow UI pour suivre l'exécution :" >> $GITHUB_STEP_SUMMARY
+          echo "http://localhost:8080" >> $GITHUB_STEP_SUMMARY

@@ -17,7 +17,7 @@ AIRFLOW_PASSWORD = os.getenv("AIRFLOW_PASSWORD", "admin")
 DAG_ID = "02_scraper_site_local"
 
 def trigger_dag_scraper():
-    """Déclenche le DAG 3 via l'API Airflow"""
+    """Déclenche le DAG 2 via l'API Airflow"""
     
     # URL de l'API Airflow pour créer un DAG run
     url = f"{AIRFLOW_HOST}/api/v1/dags/{DAG_ID}/dagRuns"
@@ -26,7 +26,9 @@ def trigger_dag_scraper():
     payload = {
         "conf": {
             "triggered_by": "github_actions",
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            "git_sha": os.getenv("GITHUB_SHA", "unknown"),
+            "git_ref": os.getenv("GITHUB_REF", "unknown"),
         }
     }
     
@@ -37,6 +39,8 @@ def trigger_dag_scraper():
     
     print(f"🔄 Tentative de déclenchement du DAG '{DAG_ID}'...")
     print(f"📍 URL: {url}")
+    print(f"🔗 SHA Git: {os.getenv('GITHUB_SHA', 'unknown')}")
+    print(f"🔗 Ref Git: {os.getenv('GITHUB_REF', 'unknown')}")
     
     try:
         # Essayer SANS authentification d'abord
@@ -90,5 +94,4 @@ def trigger_dag_scraper():
 
 if __name__ == "__main__":
     exit_code = trigger_dag_scraper()
-    sys.exit(exit_code)
     sys.exit(exit_code)
