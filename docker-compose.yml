@@ -120,6 +120,13 @@ services:
           --lastname AniData \
           --role Admin \
           --email admin@anidata.lab
+        airflow users create \
+          --username airflow \
+          --password airflow \
+          --firstname Airflow \
+          --lastname User \
+          --role Admin \
+          --email airflow@anidata.lab || true
         airflow connections add 'elasticsearch_default' \
           --conn-type 'elasticsearch' \
           --conn-host 'elasticsearch' \
@@ -157,6 +164,7 @@ services:
       - AIRFLOW__WEBSERVER__SECRET_KEY=${AIRFLOW__WEBSERVER__SECRET_KEY}
       - AIRFLOW__WEBSERVER__EXPOSE_CONFIG=${AIRFLOW__WEBSERVER__EXPOSE_CONFIG}
       - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=${AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION}
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.default
       - _PIP_ADDITIONAL_REQUIREMENTS=pandas elasticsearch apache-airflow-providers-elasticsearch
     volumes:
       - ./airflow/dags:/opt/airflow/dags
@@ -194,6 +202,7 @@ services:
       - AIRFLOW__CORE__FERNET_KEY=${AIRFLOW__CORE__FERNET_KEY}
       - AIRFLOW__CORE__LOAD_EXAMPLES=${AIRFLOW__CORE__LOAD_EXAMPLES}
       - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=${AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION}
+      - AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.default
       - _PIP_ADDITIONAL_REQUIREMENTS=pandas elasticsearch apache-airflow-providers-elasticsearch
     volumes:
       - ./airflow/dags:/opt/airflow/dags
