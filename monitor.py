@@ -35,6 +35,3 @@ while True:
     else:
         print("⏳ En attente...")
         time.sleep(30)
-
-def main():
-    pass
