@@ -1,4 +1,5 @@
 #!/bin/sh
+'''exec' "/Users/cheickna/Documents/DIA2/Anita_data/Projet 23-03/anidata-lab/venv/bin/python3.12" "$0" "$@"
 '''exec' "/Users/nerminekhadraoui/Desktop/HETIC/Bachelor 2/anidata/venv/bin/python3.12" "$0" "$@"
 ' '''
 import sys
