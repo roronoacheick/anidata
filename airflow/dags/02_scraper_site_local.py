@@ -90,4 +90,4 @@ with DAG(
     # Définir le flux : démarrage → scraping → vérification
     task_start >> task_scrape >> task_verify
     #test
-    
+#test
