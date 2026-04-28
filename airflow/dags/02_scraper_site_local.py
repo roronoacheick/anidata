@@ -72,7 +72,7 @@ with DAG(
         task_id="scrape_site",
         bash_command="""
             mkdir -p /opt/airflow/data/scraped_data && \
-            cd /opt/airflow && \
+            export PYTHONPATH=/opt/airflow/anidata_scraper:$PYTHONPATH && \
             python -m anidata_scraper.scraper \
                 --base-url http://mock-site \
                 --output-dir /opt/airflow/data/scraped_data
