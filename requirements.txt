@@ -206,3 +206,4 @@ widgetsnbextension==4.0.15
 wirerope==1.0.0
 wrapt==2.1.2
 zipp==3.23.0
+requests==2.32.5
