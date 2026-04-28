@@ -172,6 +172,7 @@ services:
       - ./airflow/plugins:/opt/airflow/plugins
       - ./airflow/scripts:/opt/airflow/scripts
       - ./data:/opt/airflow/data
+      - ./anidata-scraper:/opt/airflow/anidata-scraper
     ports:
       - "8080:8080"
     mem_limit: 512m
@@ -210,6 +211,7 @@ services:
       - ./airflow/plugins:/opt/airflow/plugins
       - ./airflow/scripts:/opt/airflow/scripts
       - ./data:/opt/airflow/data
+      - ./anidata-scraper:/opt/airflow/anidata-scraper
     mem_limit: 512m
     depends_on:
       airflow-init:

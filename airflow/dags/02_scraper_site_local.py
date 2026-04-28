@@ -71,7 +71,7 @@ with DAG(
     task_scrape = BashOperator(
         task_id="scrape_site",
         bash_command="cd /opt/airflow && python anidata-scraper/anidata_scraper/scraper.py",
-        doc_md="Scrape le site local http://localhost:8000/",
+        doc_md="Scrape le site local mock-site",
     )
 
     # Vérification des données scrappées
